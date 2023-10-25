@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>The MealDB API Demo</title>
+		<style>
+			body {
+				font-family: Avenir;
+				background-color: #f2f2f2;
+				margin: 0;
+				padding: 0;
+			}
+
+			h1 {
+				text-align: center;
+				padding: 10px;
+			}
+
+			#mealInfo {
+				background-color: white;
+				padding: 20px;
+				margin: 20px;
+				border-radius: 10px;
+			}
+
+			#apiInfo {
+				background-color: white;
+				padding: 20px;
+				margin: 20px;
+				border-radius: 10px;
+			}
+		</style>
+	</head>
+	<body>
+		<h1>The MealDB API Demo</h1>
+		<div id="mealInfo"></div>
+		<div id="apiInfo"></div>
+
+		<script>
+			var url = "https://www.themealdb.com/api/json/v1/1/search.php?s=Potato";
+
+			var http = new XMLHttpRequest();
+
+			http.onreadystatechange = function () {
+				if (http.readyState == 4 && http.status == 200) {
+					var data = JSON.parse(http.responseText);
+
+					data.meals.forEach((meal) => {
+						displayMealData(meal);
+					});
+
+					displayApiInfo();
+				}
+			};
+
+			http.open("GET", url, true);
+			http.send();
+
+			function displayMealData(meal) {
+				var mealInfo = document.getElementById("mealInfo");
+
+				var mealName = document.createElement("h2");
+				mealName.textContent = meal.strMeal;
+
+				var mealCategory = document.createElement("p");
+				mealCategory.textContent = "Category: " + meal.strCategory;
+
+				var mealInstructions = document.createElement("p");
+				mealInstructions.textContent = "Instructions: " + meal.strInstructions;
+
+				mealInfo.appendChild(mealName);
+				mealInfo.appendChild(mealCategory);
+				mealInfo.appendChild(mealInstructions);
+			}
+
+			function displayApiInfo() {
+				var apiInfo = document.getElementById("apiInfo");
+				apiInfo.innerHTML =
+					"<p>This API allows you to search for meal recipes by name.</p>";
+
+				apiInfo.innerHTML +=
+					'<p>API Source: <a href="https://www.themealdb.com/api.php">TheMealDB API</a></p>';
+
+				apiInfo.innerHTML +=
+					"<p>API Request Parameters: s=Potato (for searching anything with Potatoes in the meal name).</p>";
+
+				apiInfo.innerHTML +=
+					"<p>This API would be useful to people who know what they want to cook but \
+                         don't know how to cook it, as it explicitly specifies all the \
+                        instructions including the ingredients, time, and measurements. Moreover, \
+                        it would also be helpful to people who are interested in cooking, as it shows \
+                        what category the food is in, ex. Vegetarian, which helps them gain a better \
+                        understanding of the ingredients. ";
+			}
+		</script>
+	</body>
+</html>
